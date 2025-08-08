@@ -140,3 +140,31 @@ footer a:not(.nav-link) {
   .page-break {
     padding-top: 5rem;
     page-break-before: always; } }
+
+#floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000; }
+
+#scroll-top-btn {
+  display: none; }
+
+body.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1; }
+
+body.dark-mode .bg-white {
+  background-color: #1e1e1e !important; }
+
+body.dark-mode .text-muted {
+  color: #bbbbbb !important; }
+
+body.dark-mode a {
+  color: #66b2ff; }
+
+body.dark-mode .nav-link {
+  color: #f1f1f1; }
