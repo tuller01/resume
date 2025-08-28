@@ -10,11 +10,17 @@ RUN apt-get update && apt-get install -y git nginx sqlite3
 # Clone the repository
 RUN git clone https://github.com/tuller01/resume.git .
 
-# Create and run the git_pull script in the background
-RUN echo "#!/bin/sh\nwhile true; do git pull; sleep 300; done" > /app/git_pull.sh && chmod +x /app/git_pull.sh
+# Create the git_pull script
+RUN echo '#!/bin/sh\\nwhile true; do git pull; sleep 300; done' > /app/git_pull.sh && chmod +x /app/git_pull.sh
 
-# Copy the database initialization script
-COPY database.py .
+# Create the database.py script
+RUN echo 'import sqlite3' > /app/database.py && \
+    echo 'def init_db():' >> /app/database.py && \
+    echo "    conn = sqlite3.connect('database.db')" >> /app/database.py && \
+    echo '    print("Opened database successfully")' >> /app/database.py && \
+    echo "    conn.execute('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)')" >> /app/database.py && \
+    echo '    print("Table created successfully")' >> /app/database.py && \
+    echo '    conn.close()' >> /app/database.py
 
 # Initialize the database
 RUN python3 -c 'from database import init_db; init_db()'
