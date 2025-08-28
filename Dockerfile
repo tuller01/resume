@@ -20,4 +20,4 @@ RUN cp nginx.conf /etc/nginx/sites-available/default
 EXPOSE 80
 
 # Start Gunicorn and Nginx
-CMD service nginx start && gunicorn --bind 0.0.0.0:8000 run:app
+CMD service nginx start && gunicorn --bind 0.0.0.0:80 run:app
