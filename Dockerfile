@@ -14,7 +14,7 @@ RUN git clone https://github.com/tuller01/resume.git .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy nginx config
-COPY nginx.conf /etc/nginx/sites-available/default
+RUN cp nginx.conf /etc/nginx/sites-available/default
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
