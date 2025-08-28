@@ -1,5 +1,25 @@
-from flask import current_app as app, render_template
+from flask import current_app as app, render_template, request
+import sqlite3
 
 @app.route("/")
 def hello_world():
-    return render_template('index.html')
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT name, message, timestamp FROM messages ORDER BY timestamp DESC")
+    messages = c.fetchall()
+    conn.close()
+    return render_template('index.html', messages=messages)
+
+@app.route("/contact", methods=["POST"])
+def contact():
+    name = request.form.get("name")
+    email = request.form.get("email")
+    message = request.form.get("message")
+
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO messages (name, email, message) VALUES (?, ?, ?)", (name, email, message))
+    conn.commit()
+    conn.close()
+
+    return "Thank you for your message!"
