@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y git nginx sqlite3
 # Clone the repository
 RUN git clone https://github.com/tuller01/resume.git .
 
+# Create and run the git_pull script in the background
+RUN echo "#!/bin/sh\nwhile true; do git pull; sleep 300; done" > /app/git_pull.sh && chmod +x /app/git_pull.sh
+
 # Copy the database initialization script
 COPY database.py .
 
@@ -22,11 +25,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy nginx config
 RUN cp nginx.conf /etc/nginx/sites-available/default
 
-# Copy the git_pull script
-COPY git_pull.sh .
-
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
 # Start Gunicorn, Nginx, and the git_pull script
-CMD service nginx start && ./git_pull.sh & gunicorn --bind 0.0.0.0:8000 --reload run:app
+CMD service nginx start && /app/git_pull.sh & gunicorn --bind 0.0.0.0:8000 --reload run:app
