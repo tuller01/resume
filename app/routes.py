@@ -1,7 +1,9 @@
-from flask import current_app as app, render_template, request
+from flask import Blueprint, render_template, request
 import sqlite3
 
-@app.route("/")
+main = Blueprint('main', __name__)
+
+@main.route("/")
 def hello_world():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -10,7 +12,7 @@ def hello_world():
     conn.close()
     return render_template('index.html', messages=messages)
 
-@app.route("/contact", methods=["POST"])
+@main.route("/contact", methods=["POST"])
 def contact():
     name = request.form.get("name")
     email = request.form.get("email")
